@@ -9,7 +9,6 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import json
 import os
-# import urllib2
 from urllib import request as urllib2
 import time
 from timeout import timeout
@@ -24,15 +23,12 @@ def download(img):
     Download the image.
     :return:
     '''
-    # print(str(img, 'urf-8'))
-    req = urllib2.Request(img, headers={'User-Agent': header})
+    # req = urllib2.Request(img, headers={'User-Agent': header})
     raw_img = urllib2.urlopen(img).read()
-    # print(raw_img.read())
-    # print(raw_img)
-    if 'jpg' in raw_img:
-        f = open(os.path.join(folder, searchterm, "image_" + str(succounter) + "." + imgtype), "wb")
-        f.write(raw_img)
-        f.close()
+    # if 'jpg' in str(raw_img):
+    f = open(os.path.join(folder, searchterm, "image_" + str(succounter) + "." + imgtype), "wb")
+    f.write(raw_img)
+    f.close()
 
 
 for name in names:
