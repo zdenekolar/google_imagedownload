@@ -9,40 +9,51 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import json
 import os
-import urllib2
+# import urllib2
+from urllib import request as urllib2
 import time
 from timeout import timeout
 
+# Enter the name of the files with links. One link per line.
+names = ['test.txt']
 
-names = ['gothic_wiki.txt', 'romanesque_wiki.txt', 'renaissance_wiki.txt']
 
 @timeout(10)
-def download():
-    
-    print(img)
+def download(img):
+    '''
+    Download the image.
+    :return:
+    '''
+    # print(str(img, 'urf-8'))
     req = urllib2.Request(img, headers={'User-Agent': header})
-    raw_img = urllib2.urlopen(req).read()
-    f = open(os.path.join(folder, searchterm, "image_" + str(succounter) + "." + imgtype), "wb")
-    f.write(raw_img)
-    f.close()
+    raw_img = urllib2.urlopen(img).read()
+    # print(raw_img.read())
+    # print(raw_img)
+    if 'jpg' in raw_img:
+        f = open(os.path.join(folder, searchterm, "image_" + str(succounter) + "." + imgtype), "wb")
+        f.write(raw_img)
+        f.close()
 
-    
 
 for name in names:
+    # Read the links in the text file.
     with open(name) as f:
         searchterms = f.read()
-        text = unicode(searchterms, 'utf-8').splitlines()    
-    
+        text = searchterms.splitlines()
+
+    # For each line in the file:
     for searchterm in text:
-        print(searchterm)
+        print('Searchterm: ', searchterm)
     
         url = "https://www.google.com.hk/search?q="+searchterm+"&espv=2&biw=1366&bih=613&source=lnms&tbm=isch&sa=X&ved=0ahUKEwi-iavsvbbQAhUGOrwKHTrIAKYQ_AUIBigB"
+        # url = searchterm
         browser = webdriver.Chrome()
         browser.get(url)
         header={'User-Agent':"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36"}
         succounter = 0
-        
-        folder = r'D:\ConvNet\arch_styles/' + name.replace('_wiki.txt', '')
+
+        curr_path = os.getcwd()
+        folder = curr_path + '/images/'
         if not os.path.exists(folder):
             os.mkdir(folder)    
             
@@ -54,18 +65,16 @@ for name in names:
             time.sleep(.01)
         
         for x in browser.find_elements_by_xpath("//div[@class='rg_meta']"):    
-            print ("Count:", succounter)
-#            print ("URL:",json.loads(x.get_attribute('innerHTML'))["ou"])
+            print("Count:", succounter)
         
             img = json.loads(x.get_attribute('innerHTML'))["ou"]
             imgtype = json.loads(x.get_attribute('innerHTML'))["ity"]
             try:
-                download()
-            except:
+                print('Img: ', img)
+                download(img)
+            except Exception:
                 print ("Unsuccessful.")
             succounter += 1
         
-        print (succounter, "Images succesfully downloaded.")
+        print(succounter, "Images successfully downloaded.")
         browser.close()
-        
-    

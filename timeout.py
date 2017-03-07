@@ -17,16 +17,17 @@ def timeout(timeout):
             def newFunc():
                 try:
                     res[0] = func(*args, **kwargs)
-                except Exception( e):
-                    res[0] = e
+                except Exception():
+                    # res[0] = e
+                    pass
             t = Thread(target=newFunc)
             t.daemon = True
             try:
                 t.start()
                 t.join(timeout)
-            except Exception(je):
+            except Exception:
                 print ('error starting thread')
-                raise Exception(je)
+                raise Exception()
             ret = res[0]
             if isinstance(ret, BaseException):
                 raise ret
