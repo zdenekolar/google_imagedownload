@@ -41,11 +41,11 @@ for name in names:
     for searchterm in text:
         print('Searchterm: ', searchterm)
     
-        url = "https://www.google.com.hk/search?q="+searchterm+"&espv=2&biw=1366&bih=613&source=lnms&tbm=isch&sa=X&ved=0ahUKEwi-iavsvbbQAhUGOrwKHTrIAKYQ_AUIBigB"
-        # url = searchterm
+        # url = "https://www.google.com.hk/search?q="+searchterm+"&espv=2&biw=1366&bih=613&source=lnms&tbm=isch&sa=X&ved=0ahUKEwi-iavsvbbQAhUGOrwKHTrIAKYQ_AUIBigB"
+        url = searchterm
         browser = webdriver.Chrome()
         browser.get(url)
-        header={'User-Agent':"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36"}
+        header = {'User-Agent':"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36"}
         succounter = 0
 
         curr_path = os.getcwd()
