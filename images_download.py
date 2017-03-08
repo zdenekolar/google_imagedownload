@@ -13,6 +13,8 @@ from urllib import request as urllib2
 import time
 from timeout import timeout
 
+import urllib.parse as urlparse
+
 # Enter the name of the files with links. One link per line.
 names = ['test.txt']
 
@@ -26,7 +28,7 @@ def download(img):
     # req = urllib2.Request(img, headers={'User-Agent': header})
     raw_img = urllib2.urlopen(img).read()
     # if 'jpg' in str(raw_img):
-    f = open(os.path.join(folder, searchterm, "image_" + str(succounter) + "." + imgtype), "wb")
+    f = open(os.path.join(folder, subFolderName, "image_" + str(succounter) + "." + imgtype), "wb")
     f.write(raw_img)
     f.close()
 
@@ -52,9 +54,14 @@ for name in names:
         folder = curr_path + '/images/'
         if not os.path.exists(folder):
             os.mkdir(folder)    
-            
-        if not os.path.exists(folder + '/' + searchterm):
-            os.mkdir(folder + '/' + searchterm)
+        
+        parsed = urlparse.urlparse(searchterm)
+        searchKeyWords = urlparse.parse_qs(parsed.query)['q']
+        subFolderName = ''.join(searchKeyWords)
+        print("search term:", subFolderName)
+        
+        if not os.path.exists(folder + '/' + subFolderName):
+            os.mkdir(folder + '/' + subFolderName)
         
         for _ in range(500):
             browser.execute_script("window.scrollBy(0,10000)")
@@ -68,9 +75,12 @@ for name in names:
             try:
                 print('Img: ', img)
                 download(img)
-            except Exception:
+                succounter += 1
+                
+            except Exception as e:
                 print ("Unsuccessful.")
-            succounter += 1
+                print(str(e))
+            
         
         print(succounter, "Images successfully downloaded.")
         browser.close()
